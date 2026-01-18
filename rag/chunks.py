@@ -1,29 +1,36 @@
 import json
 from pathlib import Path
-from preprocess import load_pdfs, extract_text_with_pages, clean_text, chunk_text
+
+from rag.preprocess import load_pdfs, extract_text_with_pages, clean_text, chunk_text
 
 CHUNKS_PATH = Path("storage/chunks.jsonl")
 
 
-def ensure_storage_dir():
+def ensure_storage_dir() -> None:
     CHUNKS_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 
-def write_chunks_jsonl():
+def write_chunks_jsonl() -> None:
     """
     Export all chunks with metadata to storage/chunks.jsonl
     One JSON object per line (JSONL).
+
+    Notes:
+    - chunk_id is GLOBAL (unique across all documents), which makes debugging easier.
     """
     ensure_storage_dir()
 
     pdfs = load_pdfs()
+    print(f" Found {len(pdfs)} PDF files")
+
     total_chunks = 0
+    global_chunk_id = 0
 
     with CHUNKS_PATH.open("w", encoding="utf-8") as f:
         for pdf_path in pdfs:
             pages = extract_text_with_pages(pdf_path)
 
-            chunk_id = 0
+            doc_chunks = 0
             for page_num, page_text in pages:
                 cleaned = clean_text(page_text)
                 if not cleaned:
@@ -34,14 +41,18 @@ def write_chunks_jsonl():
                     record = {
                         "doc": pdf_path.name,
                         "page": page_num,
-                        "chunk_id": chunk_id,
+                        "chunk_id": global_chunk_id,
                         "text": chunk,
                     }
                     f.write(json.dumps(record, ensure_ascii=False) + "\n")
-                    chunk_id += 1
+
+                    global_chunk_id += 1
+                    doc_chunks += 1
                     total_chunks += 1
 
-    print(f"✅ Wrote {total_chunks} chunks to {CHUNKS_PATH}")
+            print(f" {pdf_path.name}: {doc_chunks} chunks")
+
+    print(f"\n Done! Wrote {total_chunks} total chunks → {CHUNKS_PATH}")
 
 
 if __name__ == "__main__":
