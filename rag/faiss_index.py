@@ -3,6 +3,8 @@ from pathlib import Path
 import numpy as np
 import faiss
 
+from rag.metadata import infer_metadata
+
 EMB_PATH = Path("storage/embeddings.jsonl")
 INDEX_PATH = Path("storage/index.faiss")
 META_PATH = Path("storage/index_meta.jsonl")
@@ -15,8 +17,17 @@ def build_faiss_index():
     with EMB_PATH.open("r", encoding="utf-8") as f:
         for line in f:
             r = json.loads(line)
+
             vectors.append(r["embedding"])
-            meta.append({"doc": r["doc"], "page": r["page"], "chunk_id": r["chunk_id"], "text": r["text"]})
+
+            extra = infer_metadata(r["doc"])
+            meta.append({
+                "doc": r["doc"],
+                "page": r["page"],
+                "chunk_id": r["chunk_id"],
+                "text": r["text"],
+                **extra,   # adds: year, topics, category
+            })
 
     X = np.array(vectors, dtype="float32")
 
