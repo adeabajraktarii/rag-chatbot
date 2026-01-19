@@ -6,13 +6,17 @@ def infer_metadata(doc_name: str) -> dict:
     base = doc_name.lower().replace(".pdf", "")
     base = base.replace("-", "_")
 
-    # Year (optional)
     year = int(doc_name[:4]) if len(doc_name) >= 4 and doc_name[:4].isdigit() else None
 
-    # Topics (general tags)
     topics = []
     rules = {
-        # --- Telemedicine / Telehealth ---
+        "payforperformance": "pay-for-performance",
+        "pay_for_performance": "pay-for-performance",
+        "pay-for-performance": "pay-for-performance",
+        "p4p": "pay-for-performance",
+        "performancebasedpayment": "pay-for-performance",
+        "performance_based_payment": "pay-for-performance",
+
         "telemedicine": "telemedicine",
         "telehealth": "telemedicine",
         "tele_med": "telemedicine",
@@ -20,13 +24,11 @@ def infer_metadata(doc_name: str) -> dict:
         "virtual_care": "telemedicine",
         "telecare": "telemedicine",
 
-        # --- Prior authorization / utilization management ---
         "priorauthorization": "prior-authorization",
         "prior_authorization": "prior-authorization",
         "utilizationmanagement": "utilization-management",
         "utilization_management": "utilization-management",
 
-        # --- HIS / informatics / interoperability ---
         "interoperability": "interoperability",
         "informatics": "medical-informatics",
         "healthinformationsystems": "health-information-systems",
@@ -36,11 +38,9 @@ def infer_metadata(doc_name: str) -> dict:
         "electronic_health_record": "ehr",
         "electronic_health_records": "ehr",
 
-        # --- Public health ---
         "public_health": "public-health",
         "surveillance": "public-health-surveillance",
 
-        # --- Other ---
         "robotics": "robotics",
         "robot": "robotics",
         "aging": "aging-in-place",
@@ -62,15 +62,41 @@ def infer_metadata(doc_name: str) -> dict:
 
     topics = sorted(set(topics))
 
-    # Category (coarse grouping)
+    # Categories
     category = "general"
     if any(t in topics for t in ["telemedicine", "robotics", "aging-in-place"]):
         category = "technology"
-    if any(t in topics for t in ["health-information-systems", "medical-informatics", "interoperability", "data-quality", "ehr"]):
+    if any(
+        t in topics
+        for t in [
+            "health-information-systems",
+            "medical-informatics",
+            "interoperability",
+            "data-quality",
+            "ehr",
+        ]
+    ):
         category = "health-informatics"
-    if any(t in topics for t in ["prior-authorization", "utilization-management", "public-health-surveillance", "public-health"]):
+    if any(
+        t in topics
+        for t in [
+            "prior-authorization",
+            "utilization-management",
+            "public-health-surveillance",
+            "public-health",
+            "pay-for-performance",
+        ]
+    ):
         category = "policy"
-    if any(t in topics for t in ["person-centered-care", "patient-experience", "patient-journey", "service-design"]):
+    if any(
+        t in topics
+        for t in [
+            "person-centered-care",
+            "patient-experience",
+            "patient-journey",
+            "service-design",
+        ]
+    ):
         category = "service-design"
 
     return {
@@ -78,4 +104,3 @@ def infer_metadata(doc_name: str) -> dict:
         "topics": topics,
         "category": category,
     }
-

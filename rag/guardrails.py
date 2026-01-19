@@ -1,6 +1,5 @@
 import re
 
-# Patterns that often indicate prompt-injection attempts or instruction hijacking
 INJECTION_PATTERNS = [
     r"ignore (all|previous) instructions",
     r"system prompt",

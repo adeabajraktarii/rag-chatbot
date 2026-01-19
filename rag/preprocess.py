@@ -27,7 +27,7 @@ def load_pdfs(docs_path: Path = DOCS_PATH) -> list[Path]:
             unique[pdf.name] = pdf
 
     if duplicates:
-        print("\n⚠️ Duplicate PDF filenames detected (only first copy used):")
+        print("\n Duplicate PDF filenames detected (only first copy used):")
         for name in sorted(duplicates):
             print(f" - {name}")
 
@@ -39,7 +39,7 @@ def extract_text_with_pages(pdf_path: Path) -> list[tuple[int, str]]:
     try:
         reader = PdfReader(str(pdf_path))
     except Exception as e:
-        print(f"⚠️ Failed to read PDF: {pdf_path.name} ({e})")
+        print(f" Failed to read PDF: {pdf_path.name} ({e})")
         return []
 
     pages: list[tuple[int, str]] = []
@@ -55,7 +55,7 @@ def clean_text(text: str) -> str:
     """Normalize whitespace and fix common PDF extraction artifacts."""
     text = text.replace("\r\n", "\n").replace("\r", "\n")
     text = re.sub(r"(\w)-\n(\w)", r"\1\2", text)     # fix hyphenation
-    text = re.sub(r"(?<!\n)\n(?!\n)", " ", text)     # single newline -> space
+    text = re.sub(r"(?<!\n)\n(?!\n)", " ", text)     # single newline 
     text = re.sub(r"[ \t]+", " ", text)              # collapse spaces/tabs
     text = re.sub(r"\n{3,}", "\n\n", text)           # collapse blank lines
     return text.strip()

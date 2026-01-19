@@ -56,7 +56,7 @@ def normalize_result(answer: Any, sources: Any, quotes: Any) -> tuple[str, list[
         sources = []
     sources = unique_sources(sources)
 
-    # Quotes (keep as-is for now; UI can render it)
+    # Quotes 
     if not isinstance(quotes, list):
         quotes = []
     quotes = [q for q in quotes if isinstance(q, dict)]

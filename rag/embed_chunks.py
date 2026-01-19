@@ -29,9 +29,9 @@ def embed_all_chunks():
 
             count += 1
             if count % 50 == 0:
-                print(f"✅ Embedded {count} chunks...")
+                print(f"Embedded {count} chunks...")
 
-    print(f"\n🎉 Done! Embedded {count} chunks → {OUT_PATH}")
+    print(f"\n Done! Embedded {count} chunks → {OUT_PATH}")
 
 
 if __name__ == "__main__":

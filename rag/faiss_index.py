@@ -26,12 +26,11 @@ def build_faiss_index():
                 "page": r["page"],
                 "chunk_id": r["chunk_id"],
                 "text": r["text"],
-                **extra,   # adds: year, topics, category
+                **extra,   
             })
 
     X = np.array(vectors, dtype="float32")
 
-    # Cosine similarity via inner product + L2-normalization
     faiss.normalize_L2(X)
     dim = X.shape[1]
 
@@ -45,9 +44,9 @@ def build_faiss_index():
         for m in meta:
             f.write(json.dumps(m, ensure_ascii=False) + "\n")
 
-    print(f"✅ FAISS index saved: {INDEX_PATH}")
-    print(f"✅ Metadata saved: {META_PATH}")
-    print(f"✅ Vectors indexed: {index.ntotal} (dim={dim})")
+    print(f"FAISS index saved: {INDEX_PATH}")
+    print(f"Metadata saved: {META_PATH}")
+    print(f"Vectors indexed: {index.ntotal} (dim={dim})")
 
 
 if __name__ == "__main__":
