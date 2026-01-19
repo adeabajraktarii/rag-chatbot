@@ -1,15 +1,13 @@
-# Virtual environment
 .venv/
-
-# Python cache
 __pycache__/
 *.pyc
-
-# Environment variables
 .env
 
-# Vector storage
-storage/
-
 data/docs/*.pdf
+
 storage/*
+!storage/index.faiss
+!storage/index_meta.jsonl
+
+.DS_Store
+Thumbs.db
