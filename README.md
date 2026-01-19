@@ -33,7 +33,7 @@ This project was developed as part of **Giga Academy Cohort IV – Project #4: R
 
 ✅ Streamlit Cloud Demo:
 
-**https://rag-chatbot-fzjtbcfqkjl7jg2hyqujen.streamlit.app**
+**https://rag-chatbot-5jszhrtaqy8yzkjsevmcr6.streamlit.app/**
 
 The deployed app demonstrates:
 - grounded question answering
